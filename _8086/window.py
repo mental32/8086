@@ -1,3 +1,5 @@
+import time
+
 import pygame
 
 from _8086 import __version__ as _module_version
@@ -23,7 +25,7 @@ class _8086_Window:
         return self
 
     def __next__(self):
-        pass
+        time.sleep(1 / 60)
 
     @property
     def key(self):
