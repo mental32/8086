@@ -1,10 +1,13 @@
 import pygame
 
+from _8086 import __version__ as _module_version
 
 class _8086_Window:
     pygame.init()
 
-    __version__ = '0.0.1a'
+    tb = Textbox
+
+    __version__ = _module_version
 
     def __init__(self):
         self.__key_buffer = None
