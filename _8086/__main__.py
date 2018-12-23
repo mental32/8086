@@ -18,18 +18,8 @@ def main():
     # Instantiate
     vm, window = VMLoop(), Window()
 
-    while window.alive:
+    for _ in window:
         key = window.getch()
-
-        # We may want to communicate with our VMs
-        #
-        # if key is not None:
-        #     with vm.channel.lock():
-        #         vm.channel.send(key)
-
-        for _ in vm:
-            print(_)
-
 
 if __name__ == '__main__':
     main()
