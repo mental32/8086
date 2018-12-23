@@ -2,6 +2,7 @@ import time
 
 import pygame
 
+from .scenes import Textbox
 from _8086 import __version__ as _module_version
 
 class _8086_Window:
@@ -48,7 +49,6 @@ class _8086_Window:
         rect = surface.get_rect()
         rect.topleft = position
         self.__screen.blit(surface, rect)
-        return len(text)
 
     def getch(self):
         for event in pygame.event.get():
@@ -59,8 +59,9 @@ class _8086_Window:
             elif event.type == pygame.KEYUP:
                 self.__key_buffer = None
 
-        if not self.__key_lock:
-            self.__key_lock = 1
-            return self.__key_buffer
-        else:
+        if self.__key_lock:
             return None
+
+        self.__key_lock = 1
+        return self.__key_buffer
+
