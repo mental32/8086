@@ -8,14 +8,13 @@ import contextlib
 with contextlib.redirect_stdout(io.StringIO()):
     import pygame
 
+__author__ = 'mental'
+__version__ = '0.0.1a'
+
 # module specific imports
 from .vmloop import _8086_VMLOOP
 from .window import _8086_Window
-
-__author__ = 'mental'
-__version__ = _8086_Window.__version__
-
-__debug = False
+from .scenes.textbox import Textbox
 
 components = (
     _8086_VMLOOP,
