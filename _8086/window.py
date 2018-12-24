@@ -2,13 +2,12 @@ import time
 
 import pygame
 
-from .scenes import Textbox
 from _8086 import __version__ as _module_version
 
 class _8086_Window:
     pygame.init()
 
-    tb = Textbox
+    try:
 
     __version__ = _module_version
 
