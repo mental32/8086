@@ -1,18 +1,28 @@
+import time
+import string
+
+import pygame
+
 from .base import BaseScene
+from .textbox import Textbox
 
-from _8086 import Textbox
-
-class BootBare(BootBare):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.textbox = Textbox.from_window(self.window)
-
+class Boot(BaseScene):
     def start(self):
-        self.textbox.write('A')
-        yield 1
-        self.textbox.write('B')
-        yield 1
-        self.textbox.write('C')
-        yield 1
-        self.textbox.write('D')
-        yield 1
+        vm = self.vm
+        script = getattr(self, f'_boot_{vm.config["os"].lower()}')()
+        update = lambda: pygame.display.update(self.textbox.update())
+
+        def _wrapper():
+            try:
+                delay = next(script)
+                update()
+            except StopIteration:
+                vm.update = lambda: None
+                update()
+            else:
+                time.sleep(delay)
+
+        return _wrapper
+
+    def _boot_gooper(self):
+        vm, console = self.vm, self.textbox
