@@ -1,3 +1,4 @@
+from .boot import Boot
 from .textbox import Textbox
 
 # def __getattribute__(name):
