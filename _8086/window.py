@@ -8,6 +8,9 @@ class _8086_Window:
     pygame.init()
 
     try:
+        __font = pygame.font.SysFont('firacode', 20)
+    except Exception:
+        __font = pygame.font.Font('freesans.ttf', 20)
 
     __version__ = _module_version
 
@@ -43,8 +46,8 @@ class _8086_Window:
     def screen(self):
         return self.__screen
 
-    def text(self, text, position, colour=None, size=80):
-        surface = pygame.font.SysFont('firacode', size).render(''.join(chr(c) for c in text), True, colour or (0, 0, 0))
+    def text(self, text, position, colour=None, size=80, font=__font):
+        surface = font.render(''.join(chr(c) for c in text), True, colour or (0, 0, 0))
         rect = surface.get_rect()
         rect.topleft = position
         self.__screen.blit(surface, rect)
