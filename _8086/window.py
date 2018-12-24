@@ -4,7 +4,12 @@ import pygame
 
 from _8086 import __version__ as _module_version
 
+def debug(string, __c=0):
+    print(f'[{__c}] {string}')
+    __c += 1
+
 class _8086_Window:
+    '''Class to provide and internal interface to pygame.'''
     pygame.init()
 
     try:
@@ -22,9 +27,15 @@ class _8086_Window:
         self._width = 500
         self._height = 500
 
+        self.children = []
+
     def __iter__(self):
         if type(self.__screen) != pygame.Surface:
             self.__screen = pygame.display.set_mode([self.width, self.height])
+
+            for child in self.children:
+                debug(f'Loaded child {iter(child)}')
+
         return self
 
     def __next__(self):
