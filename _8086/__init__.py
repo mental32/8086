@@ -14,7 +14,6 @@ __version__ = '0.0.1a'
 # module specific imports
 from .vmloop import _8086_VMLOOP
 from .window import _8086_Window
-from .scenes.textbox import Textbox
 
 components = (
     _8086_VMLOOP,

@@ -4,7 +4,7 @@ import string
 import pygame
 
 from .base import BaseScene
-from .textbox import Textbox
+from ..utils import Textbox
 
 class Boot(BaseScene):
     def start(self):
@@ -15,14 +15,18 @@ class Boot(BaseScene):
         def _wrapper():
             try:
                 delay = next(script)
-                update()
             except StopIteration:
-                vm.update = lambda: None
-                update()
+                vm.update = vm._update
+                return update()
             else:
+                update()
                 time.sleep(delay)
 
         return _wrapper
 
     def _boot_gooper(self):
         vm, console = self.vm, self.textbox
+
+        console.writestr('Booting gooper OS...')
+        yield 1
+        console.writeln('done!')

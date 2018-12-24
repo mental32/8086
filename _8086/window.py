@@ -57,6 +57,16 @@ class _8086_Window:
     def screen(self):
         return self.__screen
 
+    @property
+    def font(self):
+        return self.__font    
+
+    def update(self, *args, **kwargs):
+        pygame.display.update(*args, **kwargs)
+
+    def rect(self, x, y, w, h, color, screen=None):
+        pygame.draw.rect(screen or self.__screen, color, (x, y, w, h))
+
     def text(self, text, position, colour=None, size=80, font=__font):
         surface = font.render(''.join(chr(c) for c in text), True, colour or (0, 0, 0))
         rect = surface.get_rect()
