@@ -16,10 +16,16 @@ def main():
     VMLoop, Window = _8086.components
 
     # Instantiate
-    vm, window = VMLoop(), Window()
+    window = Window()
+    vm = VMLoop(window)
 
-    for _ in window:
-        key = window.getch()
+    window.children = [vm]
+
+    try:
+        for _ in window:
+            vm.update()
+    except KeyboardInterrupt:
+        print('\nExiting...')
 
 if __name__ == '__main__':
     main()
