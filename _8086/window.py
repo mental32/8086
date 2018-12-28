@@ -29,12 +29,18 @@ class _8086_Window:
 
         self.children = []
 
-    def __iter__(self):
+    def __enter__(self):
         if type(self.__screen) != pygame.Surface:
             self.__screen = pygame.display.set_mode([self.width, self.height])
+        return self        
 
-            for child in self.children:
-                debug(f'Loaded child {iter(child)}')
+    def __exit__(self, *_):
+        pass
+
+    def __iter__(self):
+        while self.children:
+            child = self.children.pop()
+            debug(f'Loaded child {iter(child)}')
 
         return self
 

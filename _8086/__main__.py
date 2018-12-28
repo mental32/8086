@@ -1,5 +1,8 @@
 import sys
 
+from .prelude import TitleScreen
+from .utils import SaveFile
+
 try:
     import _8086
 except ImportError:
@@ -9,23 +12,27 @@ except ImportError:
 import argparse
 
 def main():
-    # TODO: Argparsing
-    # TODO: Save files
-
     # Extract the module components
     VMLoop, Window = _8086.components
 
-    # Instantiate
-    window = Window()
-    vm = VMLoop(window)
-
-    window.children = [vm]
-
     try:
-        for _ in window:
-            vm.update()
+
+        with Window() as window:
+            # Title screen (save file manager)
+            with TitleScreen(window) as screen:
+                save = screen.main()
+
+            vm = VMLoop(window)
+
+            window.children = [vm]
+
+            for _ in window:
+                vm.update()
+
     except KeyboardInterrupt:
         print('\nExiting...')
 
 if __name__ == '__main__':
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument()
     main()
