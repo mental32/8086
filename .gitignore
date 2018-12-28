@@ -56,3 +56,7 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# 8086 stuff
+test\.py
+
