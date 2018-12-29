@@ -20,7 +20,9 @@ def main():
             # Title screen (save file manager)
             with TitleScreen(window) as screen:
                 for _ in window:
-                    screen.update()
+                    _savefile = screen.update()
+                    if _savefile:
+                        break
 
             vm = VMLoop(window)
 
@@ -33,6 +35,4 @@ def main():
         print('\nExiting...')
 
 if __name__ == '__main__':
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument()
     main()

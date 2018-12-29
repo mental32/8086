@@ -106,6 +106,8 @@ class TitleScreen:
                     if self._index == 0:
                         self.__state = 1
                         self.__blit_new_save()
+                    else:
+                        return SaveFile(os.path.join(_save_file_dir, self._files[self._index]))
 
                 elif key in self.__handlers:
                     self._index += self.__handlers[key]()
@@ -125,5 +127,4 @@ class TitleScreen:
 
                 elif chr(key) in 'abcdefghijklmnopqrstuvwxyz' and len(self.__inbuf) < 16:
                     self.__inbuf = self.__inbuf + chr(key)
-
-                self.__blit_new_save()
+                    self.__blit_new_save()
