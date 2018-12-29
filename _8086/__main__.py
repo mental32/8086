@@ -1,7 +1,6 @@
 import sys
 
 from .prelude import TitleScreen
-from .utils import SaveFile
 
 try:
     import _8086
@@ -20,7 +19,8 @@ def main():
         with Window() as window:
             # Title screen (save file manager)
             with TitleScreen(window) as screen:
-                save = screen.main()
+                for _ in window:
+                    screen.update()
 
             vm = VMLoop(window)
 
