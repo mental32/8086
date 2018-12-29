@@ -32,7 +32,7 @@ class _8086_Window:
             self.__screen = pygame.display.set_mode([self.width, self.height])
         return self        
 
-    def __exit__(self, *_):
+    def __exit__(self, *args):
         pass
 
     def __iter__(self):
@@ -64,6 +64,10 @@ class _8086_Window:
     @property
     def font(self):
         return self.__font    
+
+    def blank(self):
+        self.screen.fill((0, 0, 0))
+        self.update()
 
     def update(self, *args, **kwargs):
         pygame.display.update(*args, **kwargs)
