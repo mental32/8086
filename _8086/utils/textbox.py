@@ -28,6 +28,24 @@ class Textbox:
     def from_window(cls, window):
         return cls(window, 0, 0, window.width, window.height)
 
+    @property
+    def curline(self):
+        arr = []
+        c = 1
+
+        for byte in self.buffer[::-1]:
+            if byte == 13:
+                break
+
+            elif byte:
+                arr.append(self.buffer[-c])
+                c += 1
+
+        return ''.join(chr(c) for c in arr[:-1])[::-1]
+
+    def addchar(self, key):
+        self.buffer.append(key)
+
     def drain(self):
         self.buffer = array.array('H')
 
