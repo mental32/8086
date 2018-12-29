@@ -127,5 +127,3 @@ class TitleScreen:
                     self.__inbuf = self.__inbuf + chr(key)
 
                 self.__blit_new_save()
-
-            print(self.__state, key)
