@@ -1,6 +1,5 @@
-# import _8086_crt as crt
+import string
 
-from .shell import Shell
 from .scenes import Boot
 from .utils import Textbox
 
@@ -18,29 +17,40 @@ class _8086_VMLOOP:
 
     def __init__(self, window):
         self.__vmloop_id = _vmloop_id()
-
         self.window = window
-        self.layers = []
-        self.config = {'os': 'gooper'}
+        self.layers = [Textbox.from_window(window)]
 
-        self.__shell = Shell(self)
-
-        self.update = self._update
+        window.update(self.layer.writestr('>').update())
 
     def __repr__(self):
         return f'<[{self.__vmloop_id}] VMLoop object @ 0x{hex(id(self))[2:].upper()}>'
 
     def __iter__(self):
-        if not self.layers:
-            self.layers = [Textbox.from_window(self.window)]
-            self.__shell._console = self.layers[-1]
-            scene = Boot(self.window, {'textbox': self.layers[-1], 'vm': self})
-            self.update = scene.start()
         return self
 
     def __next__(self):
         pass
 
-    def _update(self):
+    @property
+    def layer(self):
+        return self.layers[-1]
+
+    def update(self):
         if self.window.getch():
-            self.window.update(self.__shell.react(self.window.key))
+            key = self.window.key
+
+            if key == 13 and self.layer.curline:
+                _string = self.layer.curline
+                print(repr(_string))
+
+            if chr(key) in string.printable:
+                self.layer.addchar(key)
+
+                if key == 13:
+                    self.layer.writestr('>')
+
+                self.window.update(self.layer.update())
+
+            elif key == 8 and self.layer.curline:
+                self.layer.buffer = self.layer.buffer[:-1]
+                self.window.update(self.layer.update())
