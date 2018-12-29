@@ -120,6 +120,7 @@ class TitleScreen:
                 elif key == 8:
                     if self.__inbuf:
                         self.__inbuf = self.__inbuf[:-1]
+                        self.__blit_new_save()
                     else:
                         self.__state = 0
                         self._index = 0
