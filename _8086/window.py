@@ -3,10 +3,8 @@ import time
 import pygame
 
 from _8086 import __version__ as _module_version
+from .utils import debug
 
-def debug(string, __c=0):
-    print(f'[{__c}] {string}')
-    __c += 1
 
 class _8086_Window:
     '''Class to provide and internal interface to pygame.'''
