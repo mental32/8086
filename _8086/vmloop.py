@@ -1,6 +1,6 @@
 import string
 
-from .scenes import Boot, LevelSelector
+from .scenes import LevelSelector, GameLevel
 from .utils import Textbox
 
 
