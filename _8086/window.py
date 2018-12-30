@@ -75,7 +75,7 @@ class _8086_Window:
     def rect(self, x, y, w, h, color, screen=None):
         pygame.draw.rect(screen or self.__screen, color, (x, y, w, h))
 
-    def text(self, text, position, color=None, size=80, font=__font):
+    def text(self, text, position, color=None, size=80, font=__font, center=False):
         if not isinstance(text, str):
             data = ''.join(chr(c) for c in text)
         else:
@@ -83,7 +83,12 @@ class _8086_Window:
 
         surface = font.render(data, True, color or (0, 0, 0))
         rect = surface.get_rect()
-        rect.topleft = position
+
+        if not center:
+            rect.topleft = position
+        else:
+            rect.center = position
+
         self.__screen.blit(surface, rect)
 
     def getch(self):
