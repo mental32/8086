@@ -19,21 +19,26 @@ def main():
 
         with Window() as window:
             screen = TitleScreen(window)
+            vmloop = VMLoop(window)
 
-            for _ in window:
-                _savefile = screen.update()
-                if _savefile:
-                    window.blank()
-                    scenes.crt_animation(window)
-                    break
+            while True:
+                screen.preload()
 
-            window.blank()
-            vm = VMLoop(window)
+                for _ in window:
+                    _savefile = screen.update()
+                    if _savefile:
+                        scenes.crt_animation(window)
+                        break
 
-            window.children = [vm]
+                window.blank()
+                window.children = [vmloop]
 
-            for _ in window:
-                vm.update()
+                vmloop.preload()
+
+                for _ in window:
+                    if vmloop.update() == 'KILLME':
+                        window.blank()
+                        break
 
     except KeyboardInterrupt:
         print('\nExiting...')
