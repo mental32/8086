@@ -1,6 +1,6 @@
 import string
 
-from .scenes import Boot
+from .scenes import Boot, LevelSelector
 from .utils import Textbox
 
 
@@ -18,9 +18,9 @@ class _8086_VMLOOP:
     def __init__(self, window):
         self.__vmloop_id = _vmloop_id()
         self.window = window
-        self.layers = [Textbox.from_window(window)]
+        self.layers = [LevelSelector(window)]
 
-        window.update(self.layer.writestr('>').update())
+        # window.update(self.layer.writestr('>').update())
 
     def __repr__(self):
         return f'<[{self.__vmloop_id}] VMLoop object @ 0x{hex(id(self))[2:].upper()}>'
@@ -36,21 +36,23 @@ class _8086_VMLOOP:
         return self.layers[-1]
 
     def update(self):
-        if self.window.getch():
-            key = self.window.key
+        self.layer.update()
 
-            if key == 13 and self.layer.curline:
-                _string = self.layer.curline
-                print(repr(_string))
+        # if self.window.getch():
+        #     key = self.window.key
 
-            if chr(key) in string.printable:
-                self.layer.addchar(key)
+        #     if key == 13 and self.layer.curline:
+        #         _string = self.layer.curline
+        #         print(repr(_string))
 
-                if key == 13:
-                    self.layer.writestr('>')
+        #     if chr(key) in string.printable:
+        #         self.layer.addchar(key)
 
-                self.window.update(self.layer.update())
+        #         if key == 13:
+        #             self.layer.writestr('>')
 
-            elif key == 8 and self.layer.curline:
-                self.layer.buffer = self.layer.buffer[:-1]
-                self.window.update(self.layer.update())
+        #         self.window.update(self.layer.update())
+
+        #     elif key == 8 and self.layer.curline:
+        #         self.layer.buffer = self.layer.buffer[:-1]
+        #         self.window.update(self.layer.update())
