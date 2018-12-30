@@ -27,6 +27,9 @@ class _8086_Window:
 
         self.children = []
 
+    def __repr__(self):
+        return f'<_8086.Window Object @ 0x{hex(id(self))[2:].upper()}>'
+
     def __enter__(self):
         if type(self.__screen) != pygame.Surface:
             self.__screen = pygame.display.set_mode([self.width, self.height])
@@ -36,6 +39,8 @@ class _8086_Window:
         pass
 
     def __iter__(self):
+        debug('Window: Entering hot loop!')
+
         while self.children:
             child = self.children.pop()
             debug(f'Loaded child {iter(child)}')
