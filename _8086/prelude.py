@@ -1,7 +1,9 @@
 import os
-import time
+import json
+import struct
 import pathlib
 import platform
+import datetime
 import itertools
 
 from .utils import SaveFile
@@ -20,22 +22,37 @@ _save_file_dir = f'{_save_file_dir}'
 def make_save(username):
     save_path = os.path.join(_save_file_dir, username)
     os.mkdir(save_path)
+
+    ts = struct.pack('=L', int(datetime.datetime.now().timestamp()))
+    _key = itertools.cycle(ts)
+    barr = bytearray()
+
+    for char in json.dumps({'levels': []}):
+        barr.append(ord(char) ^ next(_key))
+
+    with open(os.path.join(save_path, 'save.dat'), 'wb') as inf:
+        inf.write(ts)
+        inf.write(barr)
+
     return SaveFile(save_path)
 
 
 class TitleScreen:
     def __init__(self, window):
         self.window = window
+
+    def preload(self):
         self._index = 0
         self.__state = 0
         self.__inbuf = ''
 
-        self._font_width, self._font_height = window.font.size('A')
+        self._font_width, self._font_height = self.window.font.size('A')
         self._files = files = ['New save']
 
         for item in os.listdir(_save_file_dir):
             if len(item) <= 16 and os.path.isdir(os.path.join(_save_file_dir, item)):
-                self._files.append(item)
+                if 'save.dat' in os.listdir(os.path.join(_save_file_dir, item)):
+                    self._files.append(item)
         else:
             _file_len = len(files) - 1
 
@@ -73,7 +90,7 @@ class TitleScreen:
 
         for i, file in enumerate(self._files):
             string = f'> {file}' if i == self._index else f'- {file}'
-            self.window.text(string, (0, y), color=(255, 255, 255))
+            self.window.text(string, (0, y), color=((0, 255, 0) if i == self._index else (255, 255, 255)))
             y += self._font_height
 
         self.window.update()
@@ -89,7 +106,7 @@ class TitleScreen:
 
         self.window.rect(x, y + self.__ns_h, fw * 17, self._font_height * 2, (255, 255, 255))
         self.window.rect(x + 3, y + self.__ns_h + 3, (fw * 17) - 6, (self._font_height * 2) - 6, (0, 0, 0))
-        self.window.text(self.__inbuf, (x + 5, y + (self.__ns_h * 2)), color=(255, 255, 255))
+        self.window.text(self.__inbuf, (x + 5, y + (self.__ns_h * 2) - 5), color=(255, 255, 255))
 
         self.window.update()
 
