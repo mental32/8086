@@ -1,6 +1,7 @@
 import sys
 
 from .prelude import TitleScreen
+from . import scenes
 
 try:
     import _8086
@@ -17,13 +18,16 @@ def main():
     try:
 
         with Window() as window:
-            # Title screen (save file manager)
-            with TitleScreen(window) as screen:
-                for _ in window:
-                    _savefile = screen.update()
-                    if _savefile:
-                        break
+            screen = TitleScreen(window)
 
+            for _ in window:
+                _savefile = screen.update()
+                if _savefile:
+                    window.blank()
+                    scenes.crt_animation(window)
+                    break
+
+            window.blank()
             vm = VMLoop(window)
 
             window.children = [vm]
