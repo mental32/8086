@@ -18,9 +18,9 @@ class _8086_VMLOOP:
     def __init__(self, window):
         self.__vmloop_id = _vmloop_id()
         self.window = window
-        self.layers = [LevelSelector(window)]
 
-        # window.update(self.layer.writestr('>').update())
+    def preload(self):
+        self.layers = [LevelSelector(self.window)]
 
     def __repr__(self):
         return f'<[{self.__vmloop_id}] VMLoop object @ 0x{hex(id(self))[2:].upper()}>'
@@ -36,7 +36,17 @@ class _8086_VMLOOP:
         return self.layers[-1]
 
     def update(self):
-        self.layer.update()
+        if not self.layers:
+            return 'KILLME'
+
+        rv = self.layer.update()
+
+        if rv is None:
+            return
+        elif rv == 'KILLME':
+            self.layers.pop()
+        else:
+            self.layers.append(rv)
 
         # if self.window.getch():
         #     key = self.window.key
