@@ -1,57 +1,17 @@
 import os
-import json
-import struct
-import pathlib
-import platform
-import datetime
-import itertools
 
-from .utils import SaveFile
-
-_save_file_dir = None
-_system_type = platform.system().lower()
-
-if _system_type == 'linux':
-    _save_file_dir = pathlib.Path.home().absolute() / '._8086'
-
-if not _save_file_dir.exists():
-    os.mkdir(f'{_save_file_dir}')
-
-_save_file_dir = f'{_save_file_dir}'
-
-def make_save(username):
-    save_path = os.path.join(_save_file_dir, username)
-    os.mkdir(save_path)
-
-    ts = struct.pack('=L', int(datetime.datetime.now().timestamp()))
-    _key = itertools.cycle(ts)
-    barr = bytearray()
-
-    for char in json.dumps({'levels': []}):
-        barr.append(ord(char) ^ next(_key))
-
-    with open(os.path.join(save_path, 'save.dat'), 'wb') as inf:
-        inf.write(ts)
-        inf.write(barr)
-
-    return SaveFile(save_path)
+from .utils.savefile import SaveFile, _save_file_dir
 
 
 class TitleScreen:
     def __init__(self, window):
         self.window = window
-
-    def preload(self):
-        self._index = 0
-        self.__state = 0
-        self.__inbuf = ''
-
-        self._font_width, self._font_height = self.window.font.size('A')
         self._files = files = ['New save']
 
         for item in os.listdir(_save_file_dir):
-            if len(item) <= 16 and os.path.isdir(os.path.join(_save_file_dir, item)):
-                if 'save.dat' in os.listdir(os.path.join(_save_file_dir, item)):
+            path = os.path.join(_save_file_dir, item)
+            if len(item) <= 16 and os.path.isdir(path):
+                if 'save.dat' in os.listdir(path):
                     self._files.append(item)
         else:
             _file_len = len(files) - 1
@@ -61,26 +21,25 @@ class TitleScreen:
             274: lambda: (-_file_len) if (self._index == _file_len) else 1,
         }
 
+    def preload(self):
+        self._index = 0
+        self.__state = 0
+        self.__inbuf = ''
+
+        self._font_width, self._font_height = self.window.font.size('A')
 
         width = self.window.width
         height = self.window.height
-        _calc = lambda percent: width - (width // percent)
-        _wcalc = lambda percent: (width * 2) - (width // percent)
+        _calc = width - (width // 5)
 
         _, self.__ns_h = self.window.font.size('Username?')
         self.__nsy = ((width // 3) // 2) + (_ // 2)
         self.__nsx = (height // 3) // 2
 
-        self.window.rect(_calc(5), 0, 10, self.window.height, (255, 0, 0))
-        self.window.rect(_calc(5) + 10, 0, 10, self.window.height, (0, 255, 0))
-        self.window.rect(_calc(5) + 20, 0, 10, self.window.height, (0, 0, 255))
+        self.window.rect(_calc, 0, 10, height, (255, 0, 0))
+        self.window.rect(_calc + 10, 0, 10, height, (0, 255, 0))
+        self.window.rect(_calc + 20, 0, 10, height, (0, 0, 255))
         self.__blit_select()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, *args):
-        pass
 
     def __blit_select(self):
         y = self._font_height
@@ -132,7 +91,7 @@ class TitleScreen:
 
             elif state == 1:
                 if key == 13 and self.__inbuf:
-                    return make_save(self.__inbuf)
+                    return SaveFile.new_save(self.__inbuf)
 
                 elif key == 8:
                     if self.__inbuf:
