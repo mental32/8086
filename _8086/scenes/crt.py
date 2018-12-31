@@ -2,6 +2,7 @@ import itertools
 import random
 import time
 
+import pygame
 
 def crt_animation(window):
     _w, _h = window.font.size('A')
@@ -15,9 +16,8 @@ def crt_animation(window):
         threads.append([x, 0, 10, 0, next(color)])
         x += 10
 
-    window.screen.fill((0, 0, 0))
-
     while threads:
+        pygame.event.pump()
         # loop over the threads and advance their position.
         _t = []
 
