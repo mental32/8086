@@ -3,7 +3,7 @@ from .level import GameLevel
 
 
 class LevelSelector:
-    def __init__(self, window, savefile=None):
+    def __init__(self, window, savefile):
         self.window = window
         self.savefile = savefile
 
@@ -17,29 +17,30 @@ class LevelSelector:
 
     def __blit(self):
         self.__fill()
+        w_rect = self.window.rect
 
         x = _X_BASE = 20
         y = 15
         counter = 0
 
-        self.window.rect(0, 15, 5, 120, (255, 0, 0))
-        self.window.rect(0, 155, 5, 190, (0, 255, 0))
-        self.window.rect(0, 365, 5, 120, (0, 0, 255))        
+        w_rect(0, 15, 5, 120, (255, 0, 0))
+        w_rect(0, 155, 5, 190, (0, 255, 0))
+        w_rect(0, 365, 5, 120, (0, 0, 255))        
 
         for _ in range(self._max_display * (self.window.height // 70)):
-            self.window.rect(x, y, 50, 50, (255, 255, 255))
-            self.window.rect(x + 2, y + 2, 46, 46, (50, 50, 50))
+            w_rect(x, y, 50, 50, (255, 255, 255))
+            w_rect(x + 2, y + 2, 46, 46, (50, 50, 50))
             self.window.text(f'{_}', (x + 25, y + 25), (255 ,255, 255), center=True)
 
             if self.__cursor == _:
-                self.window.rect(x - 7, y + 35, 5, 20, (255, 0, 0))
-                self.window.rect(x - 7, y + 52, 25, 5, (255, 0, 0))
+                w_rect(x - 7, y + 35, 5, 20, (255, 0, 0))
+                w_rect(x - 7, y + 52, 25, 5, (255, 0, 0))
 
-                self.window.rect(x - 7, y - 7, 5, 20, (255, 0, 0))
-                self.window.rect(x - 7, y - 7, 25, 5, (255, 0, 0))
+                w_rect(x - 7, y - 7, 5, 20, (255, 0, 0))
+                w_rect(x - 7, y - 7, 25, 5, (255, 0, 0))
 
-                self.window.rect(x + 52, y - 7, 5, 20, (255, 0, 0))
-                self.window.rect(x + 32, y - 7, 25, 5, (255, 0, 0))
+                w_rect(x + 52, y - 7, 5, 20, (255, 0, 0))
+                w_rect(x + 32, y - 7, 25, 5, (255, 0, 0))
 
                 if self.__cursor <= 13:
                     _ZONE_COLOR = (255, 0, 0)
@@ -48,8 +49,8 @@ class LevelSelector:
                 else:
                     _ZONE_COLOR = (0, 0, 255)
 
-                self.window.rect(x + 32, y + 52, 25, 5, _ZONE_COLOR)
-                self.window.rect(x + 52, y + 35, 5, 20, _ZONE_COLOR)
+                w_rect(x + 32, y + 52, 25, 5, _ZONE_COLOR)
+                w_rect(x + 52, y + 35, 5, 20, _ZONE_COLOR)
 
             x += 70
 
@@ -70,8 +71,8 @@ class LevelSelector:
                 return 'KILLME'
 
             elif key == 13:
-                pass
-                # return GameLevel(self.window, self.savefile.data[self.__cursor])
+                if self.__cursor not in self.savefile.data['levels']:
+                    return GameLevel.load(self.__cursor, self.window, self.savefile)
 
             elif key == 273 and self.__cursor > (self._max_display - 1):
                 self.__cursor -= self._max_display
