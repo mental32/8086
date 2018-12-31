@@ -5,6 +5,8 @@ import pygame
 from _8086 import __version__ as _module_version
 from .utils import debug
 
+_TIMEOUT = int((1 / 60) * 1000)
+
 
 class _8086_Window:
     '''Class to provide and internal interface to pygame.'''
@@ -48,7 +50,8 @@ class _8086_Window:
         return self
 
     def __next__(self):
-        time.sleep(1 / 60)
+        pygame.event.pump()
+        pygame.time.wait(_TIMEOUT)
 
     @property
     def key(self):
@@ -97,17 +100,17 @@ class _8086_Window:
         self.__screen.blit(surface, rect)
 
     def getch(self):
-        for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN:
-                self.__key_lock = 0
-                self.__key_buffer = event.key
+        if pygame.event.peek((pygame.KEYDOWN, pygame.KEYUP)):
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    self.__key_lock = 0
+                    self.__key_buffer = event.key
 
-            elif event.type == pygame.KEYUP:
-                self.__key_buffer = None
+                elif event.type == pygame.KEYUP:
+                    self.__key_buffer = None
 
         if self.__key_lock:
             return None
 
         self.__key_lock = 1
         return self.__key_buffer
-
