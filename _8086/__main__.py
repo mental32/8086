@@ -33,7 +33,7 @@ def main():
                 window.blank()
                 window.children = [vmloop]
 
-                vmloop.preload()
+                vmloop.preload(_savefile)
 
                 for _ in window:
                     if vmloop.update() == 'KILLME':

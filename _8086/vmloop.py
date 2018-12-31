@@ -19,8 +19,9 @@ class _8086_VMLOOP:
         self.__vmloop_id = _vmloop_id()
         self.window = window
 
-    def preload(self):
-        self.layers = [LevelSelector(self.window)]
+    def preload(self, savefile):
+        self.savefile = savefile
+        self.layers = [LevelSelector(self.window, savefile)]
 
     def __repr__(self):
         return f'<[{self.__vmloop_id}] VMLoop object @ 0x{hex(id(self))[2:].upper()}>'
@@ -47,22 +48,3 @@ class _8086_VMLOOP:
             self.layers.pop()
         else:
             self.layers.append(rv)
-
-        # if self.window.getch():
-        #     key = self.window.key
-
-        #     if key == 13 and self.layer.curline:
-        #         _string = self.layer.curline
-        #         print(repr(_string))
-
-        #     if chr(key) in string.printable:
-        #         self.layer.addchar(key)
-
-        #         if key == 13:
-        #             self.layer.writestr('>')
-
-        #         self.window.update(self.layer.update())
-
-        #     elif key == 8 and self.layer.curline:
-        #         self.layer.buffer = self.layer.buffer[:-1]
-        #         self.window.update(self.layer.update())
